@@ -10,3 +10,13 @@ body {
 .auth-form {
   padding-top: 15px;
 }
+
+a {
+  text-decoration: none;
+  color: white;
+
+  &:hover,
+  &:active {
+    color: lightgray;
+  }
+}
