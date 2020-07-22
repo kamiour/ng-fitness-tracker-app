@@ -1,15 +1,16 @@
-import { Component, OnInit } from "@angular/core";
-import { NgForm } from "@angular/forms";
+import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { AuthService } from '../auth.service';
 
 @Component({
-  selector: "app-signup",
-  templateUrl: "./signup.component.html",
-  styleUrls: ["./signup.component.scss"],
+  selector: 'app-signup',
+  templateUrl: './signup.component.html',
+  styleUrls: ['./signup.component.scss']
 })
 export class SignupComponent implements OnInit {
   maxDate: Date;
 
-  constructor() {}
+  constructor(private auth: AuthService) {}
 
   ngOnInit(): void {
     this.maxDate = new Date();
@@ -17,6 +18,9 @@ export class SignupComponent implements OnInit {
   }
 
   onSubmit(form: NgForm): void {
-    console.log(form);
+    this.auth.registerUser({
+      email: form.value.email,
+      password: form.value.password
+    });
   }
 }
