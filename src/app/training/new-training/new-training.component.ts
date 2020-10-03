@@ -2,8 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Exercise } from '../exercise.model';
 import { TrainingService } from '../training.service';
 import { NgForm } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { UIService } from 'src/app/shared/ui.service';
+import * as fromRoot from '../../app.reducer';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-new-training',
@@ -13,15 +15,20 @@ import { UIService } from 'src/app/shared/ui.service';
 export class NewTrainingComponent implements OnInit, OnDestroy {
   exercises: Exercise[];
   exerciseSubscription: Subscription;
-  isLoading: boolean = false;
+  isLoading$: Observable<boolean>;
   private loadingSub: Subscription;
 
-  constructor(private trainingService: TrainingService, private uiService: UIService) {}
+  constructor(
+    private trainingService: TrainingService,
+    private uiService: UIService,
+    private store: Store<fromRoot.State>
+  ) {}
 
   ngOnInit(): void {
-    this.loadingSub = this.uiService.loadingStateChanged.subscribe((isLoading: boolean) => {
-      this.isLoading = isLoading;
-    });
+    this.isLoading$ = this.store.select(fromRoot.getIsLoading);
+    // this.loadingSub = this.uiService.loadingStateChanged.subscribe((isLoading: boolean) => {
+    //   this.isLoading = isLoading;
+    // });
 
     this.exerciseSubscription = this.trainingService.exercisesChanged.subscribe(
       (exercises: Exercise[]) => {
